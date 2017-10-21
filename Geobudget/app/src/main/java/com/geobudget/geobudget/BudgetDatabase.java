@@ -116,7 +116,7 @@ public class BudgetDatabase {
         if (cur.moveToFirst()) {
             String category = cur.getString(0);
             float allowance = cur.getFloat(1);
-            b = new Budget(category, allowance);
+            b = new Budget(id, category, allowance);
         }
 
         cur.close();
@@ -128,9 +128,10 @@ public class BudgetDatabase {
         ArrayList<Budget> l = new ArrayList<Budget>();
 
         while (cur.moveToNext()) {
+            int id = cur.getInt(0);
             String category = cur.getString(1);
             float allowance = cur.getFloat(2);
-            Budget b = new Budget(category, allowance);
+            Budget b = new Budget(id, category, allowance);
             l.add(b);
         }
 

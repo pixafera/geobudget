@@ -5,5 +5,17 @@ package com.geobudget.geobudget;
  */
 
 public class DatabaseEntry {
-    // Empty Class that Database Objects derive from
+    private int id;
+
+    public DatabaseEntry(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }
