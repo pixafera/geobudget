@@ -2,15 +2,17 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/budgetName"
         android:layout_width="282dp"
         android:layout_height="25dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Food"
         android:textAppearance="@android:style/TextAppearance.Material.Medium"
@@ -30,38 +32,35 @@
         android:textAppearance="@android:style/TextAppearance.Material.Large"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/budgetName"
-        app:layout_constraintRight_toLeftOf="@+id/textView2"
-        tools:layout_editor_absoluteX="285dp"
-        android:layout_marginBottom="0dp" />
+        app:layout_constraintRight_toLeftOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:text="/"
         android:textAppearance="@android:style/TextAppearance.Material.Large"
         app:layout_constraintBottom_toBottomOf="@+id/remainingBudget"
-        app:layout_constraintRight_toLeftOf="@+id/totalBudget"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp" />
+        app:layout_constraintRight_toLeftOf="@+id/totalBudget" />
 
     <TextView
         android:id="@+id/totalBudget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="7dp"
         android:layout_marginRight="7dp"
         android:text="£888.88"
         android:textAppearance="@android:style/TextAppearance.Holo.Medium"
         app:layout_constraintBottom_toBottomOf="@+id/budgetName"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="7dp" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="12dp"
         android:layout_height="35dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="0dp"
         android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
         android:cropToPadding="false"
@@ -72,32 +71,36 @@
         app:srcCompat="@drawable/coin_bar_start" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageView3"
+        android:layout_width="19dp"
+        android:layout_height="35dp"
+        android:layout_marginLeft="0dp"
+        android:scaleType="fitStart"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintLeft_toRightOf="@+id/centrecoin"
+        app:layout_constraintTop_toTopOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/coin_bar_end" />
+
+    <ListView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp" />
+
+    <ImageView
+        android:id="@+id/centrecoin"
         android:layout_width="9dp"
         android:layout_height="35dp"
         android:layout_marginBottom="0dp"
-        android:layout_marginLeft="-1dp"
+        android:layout_marginLeft="0dp"
         android:layout_marginTop="0dp"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintLeft_toRightOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="@+id/imageView"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/coin_bar_middle" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="19dp"
-        android:layout_height="35dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="0dp"
-        android:scaleType="fitStart"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintLeft_toRightOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="@+id/imageView"
-        app:srcCompat="@drawable/coin_bar_end"
-        tools:layout_editor_absoluteY="38dp"
-        app:layout_constraintVertical_bias="0.0" />
+        app:srcCompat="@drawable/coin_bar_middle"
+        tools:scaleType="fitStart" />
 
 </android.support.constraint.ConstraintLayout>
