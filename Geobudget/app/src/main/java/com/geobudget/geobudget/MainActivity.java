@@ -45,4 +45,8 @@ public class MainActivity extends AppCompatActivity {
         _bnm.showNotificationForCategory(2);
         _bnm.showNotificationForCategory(3);
     }
+
+    public void goToEditActivity(View v) {
+        startActivity(new Intent(this, EditActivity.class));
+    }
 }

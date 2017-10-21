@@ -9,13 +9,25 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_width="88dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="7dp"
         android:onClick="Notify_Clicked"
         android:text="Notify"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="148dp" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:layout_editor_absoluteX="100dp" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="88dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="7dp"
+        android:onClick="goToEditActivity"
+        android:text="Edit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_editor_absoluteX="220dp" />
 
     <ListView
         android:id="@+id/budget_list"
@@ -29,4 +41,5 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>
