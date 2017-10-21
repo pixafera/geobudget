@@ -26,7 +26,7 @@ public class BudgetDatabase {
         }
 
         public class Transaction implements BaseColumns {
-            public static final String TABLE_NAME = "\"transaction\"";
+            public static final String TABLE_NAME = "transaction";
             public static final String EXPENDITURE = "expenditure";
             public static final String DATE = "date";
             public static final String BUDGET = "budget";
@@ -41,13 +41,13 @@ public class BudgetDatabase {
         private final Float FLOAT_PRECISION = (float) 24;
         private final String CREATE_BUDGET_TABLE =
                 "CREATE TABLE " + BudgetDatabaseContract.Budget.TABLE_NAME + "("
-                + BudgetDatabaseContract.Budget._ID + " INTEGER PRIMARY KEY,"
+                + BudgetDatabaseContract.Budget._ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                 + BudgetDatabaseContract.Budget.CATEGORY + " TEXT,"
                 + BudgetDatabaseContract.Budget.ALLOWANCE + " FLOAT(" + FLOAT_PRECISION.toString() + ")"
                 + ")";
         private final String CREATE_TRANSACTION_TABLE =
                 "CREATE TABLE " + BudgetDatabaseContract.Transaction.TABLE_NAME + "("
-                + BudgetDatabaseContract.Transaction._ID + " INTEGER PRIMARY KEY,"
+                + BudgetDatabaseContract.Transaction._ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                 + BudgetDatabaseContract.Transaction.EXPENDITURE + " FLOAT(" + FLOAT_PRECISION.toString() + "),"
                 + BudgetDatabaseContract.Transaction.DATE + " DATE,"  // Format YYYY-MM-DD
                 + BudgetDatabaseContract.Transaction.BUDGET + " INTEGER, FOREIGN KEY (" + BudgetDatabaseContract.Transaction._ID + ") REFERENCES "
@@ -69,9 +69,9 @@ public class BudgetDatabase {
             db.execSQL(CREATE_BUDGET_TABLE);
             db.execSQL(CREATE_TRANSACTION_TABLE);
 
-            db.execSQL("INSERT INTO budget (_id, category, allowance) VALUES (1, 'Food', 80);");
-            db.execSQL("INSERT INTO budget (_id, category, allowance) VALUES (2, 'Entertainment', 20);");
-            db.execSQL("INSERT INTO budget (_id, category, allowance) VALUES (3, 'Fuel', 50);");
+            db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Food', 80);");
+            db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Entertainment', 20);");
+            db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Fuel', 50);");
         }
 
         @Override
