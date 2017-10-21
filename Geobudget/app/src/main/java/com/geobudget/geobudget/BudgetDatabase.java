@@ -121,9 +121,20 @@ public class BudgetDatabase {
     public void updateBudget(int id, Budget updatedBudget) {
         helper.getWritableDatabase().rawQuery(
                 "UPDATE budget"
-                + "SET category = " + updatedBudget.getCategory()
+                + " SET category = " + updatedBudget.getCategory()
                     + ", allowance = " + updatedBudget.getAllowance()
-                + "WHERE _id = " + id,
+                + " WHERE _id = " + id,
+                null
+        );
+    }
+
+    public void addTransaction(Transaction newTransaction) {
+        helper.getWritableDatabase().rawQuery(
+                "INSERT INTO transaction (expenditure, date, budget) VALUES ("
+                        + newTransaction.getExpenditure()
+                        + ", " + newTransaction.getDate()
+                        + ", " + newTransaction.getBudget()
+                + ")",
                 null
         );
     }
