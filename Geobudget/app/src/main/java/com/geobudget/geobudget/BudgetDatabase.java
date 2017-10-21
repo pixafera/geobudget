@@ -85,14 +85,14 @@ public class BudgetDatabase {
         this.helper = new BudgetDatabaseHelper(context);
     }
 
-    public long insert(String tableName, ArrayList values) {
+    public long insert(String tableName, DatabaseEntry entry) {
         // stub
         return 0;
     }
 
-    public ArrayList<String> query(String tableName, HashMap<String, Object> conditions) {
+    public DatabaseEntry query(String tableName, HashMap<String, Object> conditions) {
         // stub
-        return new ArrayList<>();
+        return new DatabaseEntry();
     }
 
     public void delete(String tableName, HashMap<String, Object> conditions) {
