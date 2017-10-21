@@ -15,21 +15,25 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     BudgetNotificationManager _bnm;
+    BudgetDatabase _db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        _bnm = new BudgetNotificationManager(this);
+        _db = new BudgetDatabase(this);
+        _bnm = new BudgetNotificationManager(this, _db);
 
         try {
             ListView budget_list = findViewById(R.id.budget_list);
-            String[] values = new String[]{"Food", "Fuel", "Entertainment"};
+            ArrayList<Budget> budgets = _db.getBudgets();
 
-            MainBudgetItemAdapter adapter = new MainBudgetItemAdapter(this, values);
+            MainBudgetItemAdapter adapter = new MainBudgetItemAdapter(this, budgets);
             budget_list.setAdapter(adapter);
         } catch (Exception ex) {
             int i = 0;

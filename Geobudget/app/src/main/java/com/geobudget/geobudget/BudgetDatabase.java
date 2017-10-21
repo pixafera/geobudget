@@ -1,6 +1,7 @@
 package com.geobudget.geobudget;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
@@ -26,7 +27,7 @@ public class BudgetDatabase {
         }
 
         public class Transaction implements BaseColumns {
-            public static final String TABLE_NAME = "transaction";
+            public static final String TABLE_NAME = "\"transaction\"";
             public static final String EXPENDITURE = "expenditure";
             public static final String DATE = "date";
             public static final String BUDGET = "budget";
@@ -48,9 +49,9 @@ public class BudgetDatabase {
         private final String CREATE_TRANSACTION_TABLE =
                 "CREATE TABLE " + BudgetDatabaseContract.Transaction.TABLE_NAME + "("
                 + BudgetDatabaseContract.Transaction._ID + " INTEGER PRIMARY KEY,"
-                + BudgetDatabaseContract.Transaction.EXPENDITURE + " FLOAT(" + FLOAT_PRECISION.toString() + ")"
-                + BudgetDatabaseContract.Transaction.DATE + " DATE"  // Format YYYY-MM-DD
-                + BudgetDatabaseContract.Transaction.BUDGET + " FOREIGN KEY REFERENCES "
+                + BudgetDatabaseContract.Transaction.EXPENDITURE + " FLOAT(" + FLOAT_PRECISION.toString() + "),"
+                + BudgetDatabaseContract.Transaction.DATE + " DATE,"  // Format YYYY-MM-DD
+                + BudgetDatabaseContract.Transaction.BUDGET + " INTEGER, FOREIGN KEY (" + BudgetDatabaseContract.Transaction._ID + ") REFERENCES "
                         + BudgetDatabaseContract.Budget.TABLE_NAME + "(" + BudgetDatabaseContract.Budget._ID + ")"
                 + ")";
 
@@ -68,6 +69,10 @@ public class BudgetDatabase {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(CREATE_BUDGET_TABLE);
             db.execSQL(CREATE_TRANSACTION_TABLE);
+
+            db.execSQL("INSERT INTO budget (_id, category, allowance) VALUES (1, 'Food', 80);");
+            db.execSQL("INSERT INTO budget (_id, category, allowance) VALUES (2, 'Entertainment', 20);");
+            db.execSQL("INSERT INTO budget (_id, category, allowance) VALUES (3, 'Fuel', 50);");
         }
 
         @Override
@@ -102,5 +107,33 @@ public class BudgetDatabase {
     public int update(String tableName, HashMap<String, Object> changedValues) {
         // stub
         return 0;
+    }
+
+    public Budget getBudget(int id) {
+        Cursor cur = helper.getReadableDatabase().rawQuery(String.format("SELECT category, allowance FROM budget WHERE _id = %d;", id), null);
+
+        Budget b = null;
+        if (cur.moveToFirst()) {
+            String category = cur.getString(0);
+            float allowance = cur.getFloat(1);
+            b = new Budget(category, allowance);
+        }
+
+        cur.close();
+        return b;
+    }
+
+    public ArrayList<Budget> getBudgets() {
+        Cursor cur = helper.getReadableDatabase().rawQuery("SELECT _id, category, allowance FROM budget", null);
+        ArrayList<Budget> l = new ArrayList<Budget>();
+
+        while (cur.moveToNext()) {
+            String category = cur.getString(1);
+            float allowance = cur.getFloat(2);
+            Budget b = new Budget(category, allowance);
+            l.add(b);
+        }
+
+        return l;
     }
 }

@@ -20,9 +20,10 @@ public final class BudgetNotificationManager {
     private NotificationManager _notificationManager;
     private BudgetDatabase _db;
 
-    public BudgetNotificationManager(Context context) {
+    public BudgetNotificationManager(Context context, BudgetDatabase db) {
         _context = context;
         _notificationManager = (NotificationManager) _context.getSystemService(Context.NOTIFICATION_SERVICE);
+        _db = db;
         createNotificationChannel();
     }
 
@@ -60,12 +61,17 @@ public final class BudgetNotificationManager {
     }
 
     public void showNotificationForCategory(int categoryId) {
+        Budget b = _db.getBudget(categoryId);
+        if (b == null) {
+            return;
+        }
+
         createSummaryNotification();
         NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(_context,
                         NCHANNEL_BUDGET_REMINDERS)
-                        .setContentTitle("Budget Reminder")
-                        .setContentText(getContentForCategory(categoryId))
+                        .setContentTitle(b.getCategory())
+                        .setContentText(String.format("You have £%.2f left to spend this month", b.getAllowance()))
                         .setSmallIcon(R.drawable.budget_reminder)
                         .setGroup("Budget Reminders")
                         .setGroupSummary(false);
@@ -90,20 +96,5 @@ public final class BudgetNotificationManager {
         } catch (Exception ex) {
             int i = 0;
         }
-    }
-
-    private String getContentForCategory(int categoryId) {
-        switch (categoryId) {
-            case 1:
-                return "You have £4.20 left in your clothing budget";
-
-            case 2:
-                return "You have £12.56 left in your entertainment budget";
-
-            case 3:
-                return "You have £99.70 left in your Miscellaneous budget";
-        }
-
-        return "I'm sorry, I can't do that Dave";
     }
 }

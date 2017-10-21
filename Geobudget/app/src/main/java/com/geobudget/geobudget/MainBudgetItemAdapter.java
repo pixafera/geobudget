@@ -8,15 +8,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Created by nicholas on 21/10/2017.
  */
 
-public class MainBudgetItemAdapter extends ArrayAdapter<String> {
+public class MainBudgetItemAdapter extends ArrayAdapter<Budget> {
     private final Context context;
-    private final String[] values;
+    private final ArrayList<Budget> values;
 
-    public MainBudgetItemAdapter(Context context, String[] values) {
+    public MainBudgetItemAdapter(Context context, ArrayList<Budget> values) {
         super(context, -1, values);
         this.context = context;
         this.values = values;
@@ -28,10 +30,10 @@ public class MainBudgetItemAdapter extends ArrayAdapter<String> {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.main_budget_item, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.budgetName);
-        textView.setText(values[position]);
-        // change the icon for Windows and iPhone
-        String s = values[position];
+        textView.setText(values.get(position).getCategory());
 
+        TextView totalBudget = (TextView) rowView.findViewById(R.id.totalBudget);
+        totalBudget.setText(String.format("£%.2f", values.get(position).getAllowance()));
         return rowView;
     }
 }
