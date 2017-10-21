@@ -18,7 +18,7 @@ public final class BudgetNotificationManager {
 
     private Context _context;
     private NotificationManager _notificationManager;
-    private BudgetDatabaseContract.BudgetDatabaseHelper _db;
+    private BudgetDatabase _db;
 
     public BudgetNotificationManager(Context context) {
         _context = context;

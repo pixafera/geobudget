@@ -11,7 +11,9 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
     BudgetNotificationManager _bnm;
@@ -22,6 +24,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         _bnm = new BudgetNotificationManager(this);
+
+        try {
+            ListView budget_list = findViewById(R.id.budget_list);
+            String[] values = new String[]{"Food", "Fuel", "Entertainment"};
+
+            MainBudgetItemAdapter adapter = new MainBudgetItemAdapter(this, values);
+            budget_list.setAdapter(adapter);
+        } catch (Exception ex) {
+            int i = 0;
+        }
     }
 
     public void Notify_Clicked(View v) {
