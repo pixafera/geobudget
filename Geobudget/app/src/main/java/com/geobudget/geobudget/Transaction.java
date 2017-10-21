@@ -11,6 +11,13 @@ public class Transaction extends DatabaseEntry {
     private Date date;
     private Integer budget;
 
+    public Transaction(int id, float expenditure, Date date, int budget) {
+        super(id);
+        this.expenditure = expenditure;
+        this.date = date;
+        this.budget = budget;
+    }
+
     public Float getExpenditure() {
         return this.expenditure;
     }

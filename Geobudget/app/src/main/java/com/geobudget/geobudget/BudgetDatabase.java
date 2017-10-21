@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by joel on 21/10/17.
@@ -27,7 +26,7 @@ public class BudgetDatabase {
         }
 
         public class Transaction implements BaseColumns {
-            public static final String TABLE_NAME = "\"transaction\"";
+            public static final String TABLE_NAME = "transaction";
             public static final String EXPENDITURE = "expenditure";
             public static final String DATE = "date";
             public static final String BUDGET = "budget";
@@ -42,13 +41,13 @@ public class BudgetDatabase {
         private final Float FLOAT_PRECISION = (float) 24;
         private final String CREATE_BUDGET_TABLE =
                 "CREATE TABLE " + BudgetDatabaseContract.Budget.TABLE_NAME + "("
-                + BudgetDatabaseContract.Budget._ID + " INTEGER PRIMARY KEY,"
+                + BudgetDatabaseContract.Budget._ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                 + BudgetDatabaseContract.Budget.CATEGORY + " TEXT,"
                 + BudgetDatabaseContract.Budget.ALLOWANCE + " FLOAT(" + FLOAT_PRECISION.toString() + ")"
                 + ")";
         private final String CREATE_TRANSACTION_TABLE =
                 "CREATE TABLE " + BudgetDatabaseContract.Transaction.TABLE_NAME + "("
-                + BudgetDatabaseContract.Transaction._ID + " INTEGER PRIMARY KEY,"
+                + BudgetDatabaseContract.Transaction._ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                 + BudgetDatabaseContract.Transaction.EXPENDITURE + " FLOAT(" + FLOAT_PRECISION.toString() + "),"
                 + BudgetDatabaseContract.Transaction.DATE + " DATE,"  // Format YYYY-MM-DD
                 + BudgetDatabaseContract.Transaction.BUDGET + " INTEGER, FOREIGN KEY (" + BudgetDatabaseContract.Transaction._ID + ") REFERENCES "
@@ -69,10 +68,6 @@ public class BudgetDatabase {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(CREATE_BUDGET_TABLE);
             db.execSQL(CREATE_TRANSACTION_TABLE);
-
-            db.execSQL("INSERT INTO budget (_id, category, allowance) VALUES (1, 'Food', 80);");
-            db.execSQL("INSERT INTO budget (_id, category, allowance) VALUES (2, 'Entertainment', 20);");
-            db.execSQL("INSERT INTO budget (_id, category, allowance) VALUES (3, 'Fuel', 50);");
         }
 
         @Override
@@ -90,23 +85,11 @@ public class BudgetDatabase {
         this.helper = new BudgetDatabaseHelper(context);
     }
 
-    public long insert(String tableName, DatabaseEntry entry) {
-        // stub
-        return 0;
-    }
-
-    public DatabaseEntry query(String tableName, HashMap<String, Object> conditions) {
-        // stub
-        return new DatabaseEntry();
-    }
-
-    public void delete(String tableName, HashMap<String, Object> conditions) {
-        // stub
-    }
-
-    public int update(String tableName, HashMap<String, Object> changedValues) {
-        // stub
-        return 0;
+    public void addTestBudgets() {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Food', 80);", null);
+        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Entertainment', 20);",null);
+        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Fuel', 50);", null);
     }
 
     public Budget getBudget(int id) {
@@ -116,7 +99,7 @@ public class BudgetDatabase {
         if (cur.moveToFirst()) {
             String category = cur.getString(0);
             float allowance = cur.getFloat(1);
-            b = new Budget(category, allowance);
+            b = new Budget(id, category, allowance);
         }
 
         cur.close();
@@ -128,12 +111,34 @@ public class BudgetDatabase {
         ArrayList<Budget> l = new ArrayList<Budget>();
 
         while (cur.moveToNext()) {
+            int id = cur.getInt(0);
             String category = cur.getString(1);
             float allowance = cur.getFloat(2);
-            Budget b = new Budget(category, allowance);
+            Budget b = new Budget(id, category, allowance);
             l.add(b);
         }
 
         return l;
+    }
+
+    public void updateBudget(int id, Budget updatedBudget) {
+        helper.getWritableDatabase().rawQuery(
+                "UPDATE budget"
+                + " SET category = " + updatedBudget.getCategory()
+                    + ", allowance = " + updatedBudget.getAllowance()
+                + " WHERE _id = " + id,
+                null
+        );
+    }
+
+    public void addTransaction(Transaction newTransaction) {
+        helper.getWritableDatabase().rawQuery(
+                "INSERT INTO transaction (expenditure, date, budget) VALUES ("
+                        + newTransaction.getExpenditure()
+                        + ", " + newTransaction.getDate()
+                        + ", " + newTransaction.getBudget()
+                + ")",
+                null
+        );
     }
 }

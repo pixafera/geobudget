@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         _db = new BudgetDatabase(this);
+        _db.addTestBudgets();
         _bnm = new BudgetNotificationManager(this, _db);
 
         try {
@@ -44,5 +45,9 @@ public class MainActivity extends AppCompatActivity {
         _bnm.showNotificationForCategory(1);
         _bnm.showNotificationForCategory(2);
         _bnm.showNotificationForCategory(3);
+    }
+
+    public void goToEditActivity(View v) {
+        startActivity(new Intent(this, EditActivity.class));
     }
 }
