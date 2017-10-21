@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/budgetName"
-        android:layout_width="match_parent"
+        android:layout_width="282dp"
+        android:layout_height="25dp"
+        android:text="Food"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp" />
+
+    <TextView
+        android:id="@+id/remainingBudget"
+        android:layout_width="89dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="£888.88"
+        android:textAlignment="textEnd"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/budgetName"
+        app:layout_constraintRight_toLeftOf="@+id/textView2"
+        tools:layout_editor_absoluteX="285dp"
+        android:layout_marginBottom="0dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
-</LinearLayout>
+        android:text="/"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        app:layout_constraintBottom_toBottomOf="@+id/remainingBudget"
+        app:layout_constraintRight_toLeftOf="@+id/totalBudget"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <TextView
+        android:id="@+id/totalBudget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="7dp"
+        android:text="£888.88"
+        android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+        app:layout_constraintBottom_toBottomOf="@+id/budgetName"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="7dp" />
+
+</android.support.constraint.ConstraintLayout>
