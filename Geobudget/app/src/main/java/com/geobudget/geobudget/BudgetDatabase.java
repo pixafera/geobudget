@@ -68,10 +68,6 @@ public class BudgetDatabase {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(CREATE_BUDGET_TABLE);
             db.execSQL(CREATE_TRANSACTION_TABLE);
-
-            db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Food', 80);");
-            db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Entertainment', 20);");
-            db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Fuel', 50);");
         }
 
         @Override
@@ -87,6 +83,13 @@ public class BudgetDatabase {
 
     public BudgetDatabase(Context context) {
         this.helper = new BudgetDatabaseHelper(context);
+    }
+
+    public void addTestBudgets() {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Food', 80);", null);
+        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Entertainment', 20);",null);
+        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Fuel', 50);", null);
     }
 
     public Budget getBudget(int id) {
