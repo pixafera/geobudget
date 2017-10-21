@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by joel on 21/10/17.
@@ -90,25 +89,6 @@ public class BudgetDatabase {
         this.helper = new BudgetDatabaseHelper(context);
     }
 
-    public long insert(String tableName, DatabaseEntry entry) {
-        // stub
-        return 0;
-    }
-
-    public DatabaseEntry query(String tableName, HashMap<String, Object> conditions) {
-        // stub
-        return new DatabaseEntry();
-    }
-
-    public void delete(String tableName, HashMap<String, Object> conditions) {
-        // stub
-    }
-
-    public int update(String tableName, HashMap<String, Object> changedValues) {
-        // stub
-        return 0;
-    }
-
     public Budget getBudget(int id) {
         Cursor cur = helper.getReadableDatabase().rawQuery(String.format("SELECT category, allowance FROM budget WHERE _id = %d;", id), null);
 
@@ -136,5 +116,15 @@ public class BudgetDatabase {
         }
 
         return l;
+    }
+
+    public void updateBudget(int id, Budget updatedBudget) {
+        helper.getWritableDatabase().rawQuery(
+                "UPDATE budget"
+                + "SET category = " + updatedBudget.getCategory()
+                    + ", allowance = " + updatedBudget.getAllowance()
+                + "WHERE _id = " + id,
+                null
+        );
     }
 }
