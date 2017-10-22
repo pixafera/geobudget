@@ -29,7 +29,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
 
         _db = new BudgetDatabase(this);
-        _db.addTestBudgets();
+
+        if (_db.getBudgets().isEmpty()) {
+            _db.addTestBudgets();
+        }
+
         _bnm = new BudgetNotificationManager(this, _db);
 
         try {

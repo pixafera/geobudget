@@ -26,8 +26,8 @@ public class BudgetDatabase {
             public static final String ALLOWANCE = "allowance";
         }
 
-        public class Transaction implements BaseColumns {
-            public static final String TABLE_NAME = "transaction";
+        public class Payment implements BaseColumns {
+            public static final String TABLE_NAME = "payment";
             public static final String EXPENDITURE = "expenditure";
             public static final String DATE = "date";
             public static final String BUDGET = "budget";
@@ -47,11 +47,11 @@ public class BudgetDatabase {
                 + BudgetDatabaseContract.Budget.ALLOWANCE + " FLOAT(" + FLOAT_PRECISION.toString() + ")"
                 + ")";
         private final String CREATE_TRANSACTION_TABLE =
-                "CREATE TABLE " + BudgetDatabaseContract.Transaction.TABLE_NAME + "("
-                + BudgetDatabaseContract.Transaction._ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                + BudgetDatabaseContract.Transaction.EXPENDITURE + " FLOAT(" + FLOAT_PRECISION.toString() + "),"
-                + BudgetDatabaseContract.Transaction.DATE + " DATE,"  // Format YYYY-MM-DD
-                + BudgetDatabaseContract.Transaction.BUDGET + " INTEGER, FOREIGN KEY (" + BudgetDatabaseContract.Transaction._ID + ") REFERENCES "
+                "CREATE TABLE " + BudgetDatabaseContract.Payment.TABLE_NAME + "("
+                + BudgetDatabaseContract.Payment._ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                + BudgetDatabaseContract.Payment.EXPENDITURE + " FLOAT(" + FLOAT_PRECISION.toString() + "),"
+                + BudgetDatabaseContract.Payment.DATE + " DATE,"  // Format YYYY-MM-DD
+                + BudgetDatabaseContract.Payment.BUDGET + " INTEGER, FOREIGN KEY (" + BudgetDatabaseContract.Payment._ID + ") REFERENCES "
                         + BudgetDatabaseContract.Budget.TABLE_NAME + "(" + BudgetDatabaseContract.Budget._ID + ")"
                 + ")";
 
@@ -59,7 +59,7 @@ public class BudgetDatabase {
                 "DROP TABLE IF EXISTS " + BudgetDatabaseContract.Budget.TABLE_NAME;
 
         private static final String DROP_TRANSACTION_TABLE =
-                "DROP TABLE IF EXISTS " + BudgetDatabaseContract.Transaction.TABLE_NAME;
+                "DROP TABLE IF EXISTS " + BudgetDatabaseContract.Payment.TABLE_NAME;
 
         public BudgetDatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -142,37 +142,36 @@ public class BudgetDatabase {
     }
 
     public void updateBudget(int id, Budget updatedBudget) {
-        helper.getWritableDatabase().rawQuery(
+        helper.getWritableDatabase().execSQL(
                 "UPDATE budget"
                 + " SET category = " + updatedBudget.getCategory()
                     + ", allowance = " + updatedBudget.getAllowance()
-                + " WHERE _id = " + id,
-                null
+                + " WHERE _id = " + id
         );
     }
 
-    public void addTransaction(Transaction newTransaction) {
-        helper.getWritableDatabase().rawQuery(
-                "INSERT INTO transaction (expenditure, date, budget) VALUES ("
-                        + newTransaction.getExpenditure()
-                        + ", " + newTransaction.getDate()
-                        + ", " + newTransaction.getBudget()
+    public void addTransaction(Payment newPayment) {
+        helper.getWritableDatabase().execSQL(
+                "INSERT INTO payment (expenditure, date, budget) VALUES ("
+                        + newPayment.getExpenditure()
+                        + ", " + newPayment.getDate()
+                        + ", " + newPayment.getBudget()
                 + ")",
                 null
         );
     }
 
-    public ArrayList<Transaction> getTransactionsForBudget(Integer budgetId) {
+    public ArrayList<Payment> getPaymentsForBudget(Integer budgetId) {
         Cursor cur = helper.getReadableDatabase().rawQuery(
-                "SELECT _id, expenditure, date, budget"
-                + " FROM transaction"
-                + " WHERE transaction.budget = " + budgetId.toString(),
+                "SELECT *"
+                + " FROM payment"
+                + " WHERE budget = " + budgetId.toString(),
                 null
         );
 
-        ArrayList<Transaction> transactions = new ArrayList<>();
+        ArrayList<Payment> payments = new ArrayList<>();
         while(cur.moveToNext()) {
-            Transaction transaction = new Transaction(
+            Payment payment = new Payment(
                     cur.getInt(0),
                     cur.getFloat(1),
                     new Date(cur.getLong(2)*1000),
@@ -180,6 +179,6 @@ public class BudgetDatabase {
             );
         }
 
-        return transactions;
+        return payments;
     }
 }
