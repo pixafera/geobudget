@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.ExpandedMenuView;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,14 +28,18 @@ public class CategoryActivity extends AppCompatActivity {
         }
 
         BudgetDatabase db = new BudgetDatabase(this);
+        Budget budget = db.getBudget(budgetId);
 
         TextView heading = findViewById(R.id.textView3);
-        String category = db.getBudget(budgetId).getCategory();
+        String category = budget.getCategory();
         heading.setText(category);
 
-        ArrayList<Payment> payments = db.getPaymentsForBudget(budgetId);
-
         ListView payment_list = findViewById(R.id.expandableListView);
+        ArrayList<Payment> payments = db.getPaymentsForBudget(budgetId);
         payment_list.setAdapter(new CategoryPaymentItemAdapter(this, payments));
+
+        TextView remaining_balance = findViewById(R.id.editText3);
+        float remaining = budget.getAllowance() - budget.getTotalExpenditure();
+        remaining_balance.setText("Remaining:" + String.format("£%.2f", remaining));
     }
 }
