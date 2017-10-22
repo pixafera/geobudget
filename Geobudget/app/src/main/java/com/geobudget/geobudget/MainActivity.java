@@ -11,15 +11,17 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
     BudgetNotificationManager _bnm;
     BudgetDatabase _db;
+    ArrayList<Budget> budgets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             ListView budget_list = findViewById(R.id.budget_list);
-            ArrayList<Budget> budgets = _db.getBudgets();
+            budget_list.setOnItemClickListener(this);
+            this.budgets = _db.getBudgets();
 
             MainBudgetItemAdapter adapter = new MainBudgetItemAdapter(this, budgets);
             budget_list.setAdapter(adapter);
@@ -47,7 +50,16 @@ public class MainActivity extends AppCompatActivity {
         _bnm.showNotificationForCategory(3);
     }
 
-    public void goToEditActivity(View v) {
+    public void editBudget(View v) {
         startActivity(new Intent(this, EditActivity.class));
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Budget chosen = this.budgets.get(position);
+
+        Intent intent = new Intent(this, CategoryActivity.class);
+        intent.putExtra("budgetId", chosen.getId());
+        startActivity(intent);
     }
 }
