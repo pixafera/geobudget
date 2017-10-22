@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         if (_db.getBudgets().isEmpty()) {
             _db.addTestBudgets();
+            _db.addTestTransaction();
         }
 
         _bnm = new BudgetNotificationManager(this, _db);
