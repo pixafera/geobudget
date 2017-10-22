@@ -151,7 +151,7 @@ public class PlacesService extends Service {
 
                         Log.d(TAG, "Notify");
 
-                        mBudgetNotificationManager.showNotificationForCategory(1, "Foo");
+                        mBudgetNotificationManager.showNotificationForCategory("Living Costs", "Foo");
 
                         Log.d(TAG, mLocationMap.toString());
 

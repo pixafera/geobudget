@@ -60,8 +60,8 @@ public final class BudgetNotificationManager {
         }
     }
 
-    public void showNotificationForCategory(int categoryId, String storeName) {
-        Budget b = _db.getBudget(categoryId);
+    public void showNotificationForCategory(String category, String storeName) {
+        Budget b = _db.getBudget(category);
         if (b == null) {
             return;
         }
@@ -92,7 +92,7 @@ public final class BudgetNotificationManager {
         mBuilder.setStyle(expandedStyle);*/
 
         try {
-            _notificationManager.notify(categoryId, mBuilder.build());
+            _notificationManager.notify(b.getId(), mBuilder.build());
         } catch (Exception ex) {
             int i = 0;
         }
