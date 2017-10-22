@@ -6,12 +6,14 @@ package com.geobudget.geobudget;
 
 public class Budget extends DatabaseEntry {
     private String category;
-    private Float allowance;
+    private float allowance;
+    private float totalExpenditure;
 
-    public Budget(int id, String category, Float allowance) {
+    public Budget(int id, String category, float allowance, float totalExpenditure) {
         super(id);
         this.category = category;
         this.allowance = allowance;
+        this.totalExpenditure = totalExpenditure;
     }
 
     public String getCategory() {
@@ -22,11 +24,15 @@ public class Budget extends DatabaseEntry {
         this.category = category;
     }
 
-    public Float getAllowance() {
+    public float getAllowance() {
         return this.allowance;
     }
 
-    public void setAllowance(Float allowance) {
+    public void setAllowance(float allowance) {
         this.allowance = allowance;
     }
+
+    public float getTotalExpenditure() { return this.totalExpenditure;}
+
+    public void setTotalExpenditure(float totalExpenditure) {this.totalExpenditure = totalExpenditure;}
 }

@@ -94,13 +94,14 @@ public class BudgetDatabase {
     }
 
     public Budget getBudget(int id) {
-        Cursor cur = helper.getReadableDatabase().rawQuery(String.format("SELECT category, allowance FROM budget WHERE _id = %d;", id), null);
+        Cursor cur = helper.getReadableDatabase().rawQuery(String.format("SELECT category, allowance, (SELECT SUM(expenditure) FROM \"transaction\" WHERE \"transaction\".budget = budget._id) FROM budget WHERE _id = %d;", id), null);
 
         Budget b = null;
         if (cur.moveToFirst()) {
             String category = cur.getString(0);
             float allowance = cur.getFloat(1);
-            b = new Budget(id, category, allowance);
+            float totalExpenditure = cur.getFloat(2);
+            b = new Budget(id, category, allowance, totalExpenditure);
         }
 
         cur.close();
@@ -108,14 +109,15 @@ public class BudgetDatabase {
     }
 
     public ArrayList<Budget> getBudgets() {
-        Cursor cur = helper.getReadableDatabase().rawQuery("SELECT _id, category, allowance FROM budget", null);
+        Cursor cur = helper.getReadableDatabase().rawQuery("SELECT _id, category, allowance, (SELECT SUM(expenditure) FROM \"transaction\" WHERE \"transaction\".budget = budget._id) FROM budget", null);
         ArrayList<Budget> l = new ArrayList<Budget>();
 
         while (cur.moveToNext()) {
             int id = cur.getInt(0);
             String category = cur.getString(1);
             float allowance = cur.getFloat(2);
-            Budget b = new Budget(id, category, allowance);
+            float totalExpenditure = cur.getFloat(3);
+            Budget b = new Budget(id, category, allowance, totalExpenditure);
             l.add(b);
         }
 
