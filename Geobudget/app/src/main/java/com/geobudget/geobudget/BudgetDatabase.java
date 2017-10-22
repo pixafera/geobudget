@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by joel on 21/10/17.
@@ -159,5 +160,26 @@ public class BudgetDatabase {
                 + ")",
                 null
         );
+    }
+
+    public ArrayList<Transaction> getTransactionsForBudget(Integer budgetId) {
+        Cursor cur = helper.getReadableDatabase().rawQuery(
+                "SELECT _id, expenditure, date, budget"
+                + " FROM transaction"
+                + " WHERE transaction.budget = " + budgetId.toString(),
+                null
+        );
+
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        while(cur.moveToNext()) {
+            Transaction transaction = new Transaction(
+                    cur.getInt(0),
+                    cur.getFloat(1),
+                    new Date(cur.getLong(2)*1000),
+                    cur.getInt(3)
+            );
+        }
+
+        return transactions;
     }
 }
