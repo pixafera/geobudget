@@ -8,12 +8,14 @@ public class Budget extends DatabaseEntry {
     private String category;
     private float allowance;
     private float totalExpenditure;
+    private boolean isIncome;
 
-    public Budget(int id, String category, float allowance, float totalExpenditure) {
+    public Budget(int id, String category, float allowance, float totalExpenditure, boolean isIncome) {
         super(id);
         this.category = category;
         this.allowance = allowance;
         this.totalExpenditure = totalExpenditure;
+        this.isIncome = isIncome;
     }
 
     public String getCategory() {
@@ -35,4 +37,8 @@ public class Budget extends DatabaseEntry {
     public float getTotalExpenditure() { return this.totalExpenditure;}
 
     public void setTotalExpenditure(float totalExpenditure) {this.totalExpenditure = totalExpenditure;}
+
+    public boolean getIsIncome() { return this.isIncome;}
+
+    public void setIsIncome(boolean isIncome) {this.isIncome = isIncome;}
 }

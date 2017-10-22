@@ -24,6 +24,7 @@ public class BudgetDatabase {
             public static final String TABLE_NAME = "budget";
             public static final String CATEGORY = "category";
             public static final String ALLOWANCE = "allowance";
+            public static final String IS_INCOME = "is_income";
         }
 
         public class Payment implements BaseColumns {
@@ -37,14 +38,15 @@ public class BudgetDatabase {
 
     // --- DATABASE INTERACTION HELPER ---
     private class BudgetDatabaseHelper extends SQLiteOpenHelper {
-        private static final int DATABASE_VERSION = 1;
+        private static final int DATABASE_VERSION = 5;
         private static final String DATABASE_NAME = "Geobudget.db";
         private final Float FLOAT_PRECISION = (float) 24;
         private final String CREATE_BUDGET_TABLE =
                 "CREATE TABLE " + BudgetDatabaseContract.Budget.TABLE_NAME + "("
                 + BudgetDatabaseContract.Budget._ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                 + BudgetDatabaseContract.Budget.CATEGORY + " TEXT,"
-                + BudgetDatabaseContract.Budget.ALLOWANCE + " FLOAT(" + FLOAT_PRECISION.toString() + ")"
+                + BudgetDatabaseContract.Budget.ALLOWANCE + " FLOAT(" + FLOAT_PRECISION.toString() + "),"
+                + BudgetDatabaseContract.Budget.IS_INCOME + " INTEGER"
                 + ")";
         private final String CREATE_TRANSACTION_TABLE =
                 "CREATE TABLE " + BudgetDatabaseContract.Payment.TABLE_NAME + "("
@@ -88,15 +90,15 @@ public class BudgetDatabase {
 
     public void addTestBudgets() {
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Income', 320);");
-        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Living Costs', 80);");
-        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Leisure', 20);");
-        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Travel', 50);");
-        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Home', 70);");
-        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Giving', 20);");
-        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Family and Pets', 15);");
-        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Future needs', 10);");
-        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Debt Repayment', 40);");
+        db.execSQL("INSERT INTO budget (category, allowance, is_income) VALUES ('Income', 320, 1);");
+        db.execSQL("INSERT INTO budget (category, allowance, is_income) VALUES ('Living Costs', 80, 0);");
+        db.execSQL("INSERT INTO budget (category, allowance, is_income) VALUES ('Leisure', 20, 0);");
+        db.execSQL("INSERT INTO budget (category, allowance, is_income) VALUES ('Travel', 50, 0);");
+        db.execSQL("INSERT INTO budget (category, allowance, is_income) VALUES ('Home', 70, 0);");
+        db.execSQL("INSERT INTO budget (category, allowance, is_income) VALUES ('Giving', 20, 0);");
+        db.execSQL("INSERT INTO budget (category, allowance, is_income) VALUES ('Family and Pets', 15, 0);");
+        db.execSQL("INSERT INTO budget (category, allowance, is_income) VALUES ('Future needs', 10, 0);");
+        db.execSQL("INSERT INTO budget (category, allowance, is_income) VALUES ('Debt Repayment', 40, 0);");
     }
 
     public void addTestTransaction() {
@@ -113,14 +115,15 @@ public class BudgetDatabase {
         db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (10, 12.7, 2017-10-15, (SELECT _id FROM budget WHERE category = 'Leisure'));");    }
 
     public Budget getBudget(int id) {
-        Cursor cur = helper.getReadableDatabase().rawQuery(String.format("SELECT category, allowance, (SELECT SUM(expenditure) FROM payment WHERE payment.budget = budget._id) FROM budget WHERE _id = %d;", id), null);
+        Cursor cur = helper.getReadableDatabase().rawQuery(String.format("SELECT category, allowance, is_income, (SELECT SUM(expenditure) FROM payment WHERE payment.budget = budget._id) FROM budget WHERE _id = %d;", id), null);
 
         Budget b = null;
         if (cur.moveToFirst()) {
             String category = cur.getString(0);
             float allowance = cur.getFloat(1);
-            float totalExpenditure = cur.getFloat(2);
-            b = new Budget(id, category, allowance, totalExpenditure);
+            boolean isIncome = cur.getInt(2) != 0;
+            float totalExpenditure = cur.getFloat(3);
+            b = new Budget(id, category, allowance, totalExpenditure, isIncome);
         }
 
         cur.close();
@@ -128,15 +131,26 @@ public class BudgetDatabase {
     }
 
     public ArrayList<Budget> getBudgets() {
-        Cursor cur = helper.getReadableDatabase().rawQuery("SELECT _id, category, allowance, (SELECT SUM(expenditure) FROM payment WHERE payment.budget = budget._id) FROM budget", null);
+        return getBudgets(false);
+    }
+
+    public ArrayList<Budget> getBudgets(boolean includeIncome) {
+        String sql = "SELECT _id, category, allowance, is_income, (SELECT SUM(expenditure) FROM payment WHERE payment.budget = budget._id) FROM budget";
+
+        if (!includeIncome) {
+            sql += " WHERE is_income = 0";
+        }
+
+        Cursor cur = helper.getReadableDatabase().rawQuery(sql, null);
         ArrayList<Budget> l = new ArrayList<Budget>();
 
         while (cur.moveToNext()) {
             int id = cur.getInt(0);
             String category = cur.getString(1);
             float allowance = cur.getFloat(2);
-            float totalExpenditure = cur.getFloat(3);
-            Budget b = new Budget(id, category, allowance, totalExpenditure);
+            boolean isIncome = cur.getInt(3) != 0;
+            float totalExpenditure = cur.getFloat(4);
+            Budget b = new Budget(id, category, allowance, totalExpenditure, isIncome);
             l.add(b);
         }
 
