@@ -160,9 +160,8 @@ public class BudgetDatabase {
     public void updateBudget(int id, Budget updatedBudget) {
         helper.getWritableDatabase().execSQL(
                 "UPDATE budget"
-                + " SET category = " + updatedBudget.getCategory()
-                    + ", allowance = " + updatedBudget.getAllowance()
-                + " WHERE _id = " + id
+                + " SET allowance = " + Float.toString(updatedBudget.getAllowance())
+                + " WHERE _id = " + Integer.toString(id)
         );
     }
 

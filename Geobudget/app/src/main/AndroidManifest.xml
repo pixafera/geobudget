@@ -16,7 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BudgetEdit" />
         <activity android:name=".CategoryActivity" />
         <activity android:name=".EditActivity" />
         <activity android:name=".CategoryItem"></activity>
