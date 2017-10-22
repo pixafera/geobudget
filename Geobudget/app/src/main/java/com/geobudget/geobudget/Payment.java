@@ -6,12 +6,12 @@ import java.util.Date;
  * Created by joel on 21/10/17.
  */
 
-public class Transaction extends DatabaseEntry {
+public class Payment extends DatabaseEntry {
     private Float expenditure;
     private Date date;
     private Integer budget;
 
-    public Transaction(int id, float expenditure, Date date, int budget) {
+    public Payment(int id, float expenditure, Date date, int budget) {
         super(id);
         this.expenditure = expenditure;
         this.date = date;

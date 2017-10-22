@@ -26,8 +26,8 @@ public class BudgetDatabase {
             public static final String ALLOWANCE = "allowance";
         }
 
-        public class Transaction implements BaseColumns {
-            public static final String TABLE_NAME = "transaction";
+        public class Payment implements BaseColumns {
+            public static final String TABLE_NAME = "payment";
             public static final String EXPENDITURE = "expenditure";
             public static final String DATE = "date";
             public static final String BUDGET = "budget";
@@ -47,11 +47,11 @@ public class BudgetDatabase {
                 + BudgetDatabaseContract.Budget.ALLOWANCE + " FLOAT(" + FLOAT_PRECISION.toString() + ")"
                 + ")";
         private final String CREATE_TRANSACTION_TABLE =
-                "CREATE TABLE " + BudgetDatabaseContract.Transaction.TABLE_NAME + "("
-                + BudgetDatabaseContract.Transaction._ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                + BudgetDatabaseContract.Transaction.EXPENDITURE + " FLOAT(" + FLOAT_PRECISION.toString() + "),"
-                + BudgetDatabaseContract.Transaction.DATE + " DATE,"  // Format YYYY-MM-DD
-                + BudgetDatabaseContract.Transaction.BUDGET + " INTEGER, FOREIGN KEY (" + BudgetDatabaseContract.Transaction._ID + ") REFERENCES "
+                "CREATE TABLE " + BudgetDatabaseContract.Payment.TABLE_NAME + "("
+                + BudgetDatabaseContract.Payment._ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                + BudgetDatabaseContract.Payment.EXPENDITURE + " FLOAT(" + FLOAT_PRECISION.toString() + "),"
+                + BudgetDatabaseContract.Payment.DATE + " DATE,"  // Format YYYY-MM-DD
+                + BudgetDatabaseContract.Payment.BUDGET + " INTEGER, FOREIGN KEY (" + BudgetDatabaseContract.Payment._ID + ") REFERENCES "
                         + BudgetDatabaseContract.Budget.TABLE_NAME + "(" + BudgetDatabaseContract.Budget._ID + ")"
                 + ")";
 
@@ -59,7 +59,7 @@ public class BudgetDatabase {
                 "DROP TABLE IF EXISTS " + BudgetDatabaseContract.Budget.TABLE_NAME;
 
         private static final String DROP_TRANSACTION_TABLE =
-                "DROP TABLE IF EXISTS " + BudgetDatabaseContract.Transaction.TABLE_NAME;
+                "DROP TABLE IF EXISTS " + BudgetDatabaseContract.Payment.TABLE_NAME;
 
         public BudgetDatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -88,29 +88,30 @@ public class BudgetDatabase {
 
     public void addTestBudgets() {
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Income', 320);", null);
-        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Living Costs', 80);", null);
-        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Leisure', 20);",null);
-        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Travel', 50);", null);
-        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Home', 70);", null);
-        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Giving', 20);", null);
-        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Family and Pets', 15);", null);
-        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Future needs', 10);", null);
-        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Debt Repayment', 40);", null);
+        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Income', 320);");
+        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Living Costs', 80);");
+        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Leisure', 20);");
+        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Travel', 50);");
+        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Home', 70);");
+        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Giving', 20);");
+        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Family and Pets', 15);");
+        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Future needs', 10);");
+        db.execSQL("INSERT INTO budget (category, allowance) VALUES ('Debt Repayment', 40);");
     }
 
     public void addTestTransaction() {
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (1, 5.5, 2017-10-22, 'Living Costs');", null);
-        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (2, 14.3, 2017-10-21, 'Travel');", null);
-        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (3, 6.95, 2017-10-12, 'Home');", null);
-        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (4, 10, 2017-10-17, 'Giving');", null);
-        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (5, 20, 2017-10-20, 'Living Costs');", null);
-        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (6, 30, 2017-10-11, 'Travel');", null);
-        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (7, 16.2, 2017-10-22, 'Living Costs');", null);
-        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (8, 5.3, 2017-10-16, 'Family and Pets');", null);
-        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (9, 3.2, 2017-10-11, 'Home');", null);
-        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (10, 12.7, 2017-10-15, 'Leisure');", null);
+        db.execSQL("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (1, 5.5, 2017-10-22, 'Living Costs');");
+        db.execSQL("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (2, 14.3, 2017-10-21, 'Travel');");
+        db.execSQL("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (3, 6.95, 2017-10-12, 'Home');");
+        db.execSQL("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (4, 10, 2017-10-17, 'Giving');");
+        db.execSQL("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (5, 20, 2017-10-20, 'Living Costs');");
+        db.execSQL("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (6, 30, 2017-10-11, 'Travel');");
+        db.execSQL("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (7, 16.2, 2017-10-22, 'Living Costs');");
+        db.execSQL("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (8, 5.3, 2017-10-16, 'Family and Pets');");
+        db.execSQL("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (9, 3.2, 2017-10-11, 'Home');");
+        db.execSQL("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (10, 12.7, 2017-10-15, 'Leisure');");
+    }
 
     public Budget getBudget(int id) {
         Cursor cur = helper.getReadableDatabase().rawQuery(String.format("SELECT category, allowance, (SELECT SUM(expenditure) FROM \"transaction\" WHERE \"transaction\".budget = budget._id) FROM budget WHERE _id = %d;", id), null);
@@ -144,37 +145,36 @@ public class BudgetDatabase {
     }
 
     public void updateBudget(int id, Budget updatedBudget) {
-        helper.getWritableDatabase().rawQuery(
+        helper.getWritableDatabase().execSQL(
                 "UPDATE budget"
                 + " SET category = " + updatedBudget.getCategory()
                     + ", allowance = " + updatedBudget.getAllowance()
-                + " WHERE _id = " + id,
-                null
+                + " WHERE _id = " + id
         );
     }
 
-    public void addTransaction(Transaction newTransaction) {
-        helper.getWritableDatabase().rawQuery(
-                "INSERT INTO transaction (expenditure, date, budget) VALUES ("
-                        + newTransaction.getExpenditure()
-                        + ", " + newTransaction.getDate()
-                        + ", " + newTransaction.getBudget()
+    public void addTransaction(Payment newPayment) {
+        helper.getWritableDatabase().execSQL(
+                "INSERT INTO payment (expenditure, date, budget) VALUES ("
+                        + newPayment.getExpenditure()
+                        + ", " + newPayment.getDate()
+                        + ", " + newPayment.getBudget()
                 + ")",
                 null
         );
     }
 
-    public ArrayList<Transaction> getTransactionsForBudget(Integer budgetId) {
+    public ArrayList<Payment> getPaymentsForBudget(Integer budgetId) {
         Cursor cur = helper.getReadableDatabase().rawQuery(
-                "SELECT _id, expenditure, date, budget"
-                + " FROM transaction"
-                + " WHERE transaction.budget = " + budgetId.toString(),
+                "SELECT *"
+                + " FROM payment"
+                + " WHERE budget = " + budgetId.toString(),
                 null
         );
 
-        ArrayList<Transaction> transactions = new ArrayList<>();
+        ArrayList<Payment> payments = new ArrayList<>();
         while(cur.moveToNext()) {
-            Transaction transaction = new Transaction(
+            Payment payment = new Payment(
                     cur.getInt(0),
                     cur.getFloat(1),
                     new Date(cur.getLong(2)*1000),
@@ -182,6 +182,6 @@ public class BudgetDatabase {
             );
         }
 
-        return transactions;
+        return payments;
     }
 }
