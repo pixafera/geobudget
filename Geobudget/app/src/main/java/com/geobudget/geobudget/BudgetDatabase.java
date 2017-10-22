@@ -159,8 +159,7 @@ public class BudgetDatabase {
                         + newPayment.getExpenditure()
                         + ", " + newPayment.getDate()
                         + ", " + newPayment.getBudget()
-                + ")",
-                null
+                + ")"
         );
     }
 

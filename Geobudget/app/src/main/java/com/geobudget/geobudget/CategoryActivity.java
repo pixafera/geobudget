@@ -24,6 +24,7 @@ public class CategoryActivity extends AppCompatActivity {
 
         BudgetDatabase db = new BudgetDatabase(this);
         ArrayList<Payment> payments = db.getPaymentsForBudget(budgetId);
-        Log.i("TAG", new Integer(payments.size()).toString());
+
+
     }
 }
