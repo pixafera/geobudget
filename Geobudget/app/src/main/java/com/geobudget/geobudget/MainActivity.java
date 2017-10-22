@@ -49,9 +49,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void Notify_Clicked(View v) {
-        _bnm.showNotificationForCategory(1);
-        _bnm.showNotificationForCategory(2);
-        _bnm.showNotificationForCategory(3);
+        _bnm.showNotificationForCategory(1, "Tesco Extra");
+        _bnm.showNotificationForCategory(2, "Next");
+        _bnm.showNotificationForCategory(3, "Farringdon Railway Station");
     }
 
     public void editBudget(View v) {

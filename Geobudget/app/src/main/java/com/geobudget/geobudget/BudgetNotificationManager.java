@@ -60,7 +60,7 @@ public final class BudgetNotificationManager {
         }
     }
 
-    public void showNotificationForCategory(int categoryId) {
+    public void showNotificationForCategory(int categoryId, String storeName) {
         Budget b = _db.getBudget(categoryId);
         if (b == null) {
             return;
@@ -70,8 +70,8 @@ public final class BudgetNotificationManager {
         NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(_context,
                         NCHANNEL_BUDGET_REMINDERS)
-                        .setContentTitle(b.getCategory())
-                        .setContentText(String.format("You have £%.2f left to spend this month", b.getAllowance()))
+                        .setContentTitle(storeName)
+                        .setContentText(String.format("You have £%.2f left to spend on %s this month", b.getAllowance(), b.getCategory()))
                         .setSmallIcon(R.drawable.budget_reminder)
                         .setGroup("Budget Reminders")
                         .setGroupSummary(false);
