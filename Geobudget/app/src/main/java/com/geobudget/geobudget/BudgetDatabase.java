@@ -6,8 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -122,6 +120,22 @@ public class BudgetDatabase {
         Budget b = null;
         if (cur.moveToFirst()) {
             String category = cur.getString(0);
+            float allowance = cur.getFloat(1);
+            boolean isIncome = cur.getInt(2) != 0;
+            float totalExpenditure = cur.getFloat(3);
+            b = new Budget(id, category, allowance, totalExpenditure, isIncome);
+        }
+
+        cur.close();
+        return b;
+    }
+
+    public Budget getBudget(String category) {
+        Cursor cur = helper.getReadableDatabase().rawQuery(String.format("SELECT _id, allowance, is_income, (SELECT SUM(expenditure) FROM payment WHERE payment.budget = budget._id) FROM budget WHERE category = '%s';", category), null);
+
+        Budget b = null;
+        if (cur.moveToFirst()) {
+            int id = cur.getInt(0);
             float allowance = cur.getFloat(1);
             boolean isIncome = cur.getInt(2) != 0;
             float totalExpenditure = cur.getFloat(3);

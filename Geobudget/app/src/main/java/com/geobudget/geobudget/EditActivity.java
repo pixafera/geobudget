@@ -60,7 +60,6 @@ public class EditActivity extends AppCompatActivity {
             _db.updateBudget(b.getId(), b);
         }
 
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
+        finish();
     }
 }
