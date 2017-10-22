@@ -24,6 +24,60 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.google.android.gms.location.places.Place.TYPE_AIRPORT;
+import static com.google.android.gms.location.places.Place.TYPE_AMUSEMENT_PARK;
+import static com.google.android.gms.location.places.Place.TYPE_AQUARIUM;
+import static com.google.android.gms.location.places.Place.TYPE_BAKERY;
+import static com.google.android.gms.location.places.Place.TYPE_BAR;
+import static com.google.android.gms.location.places.Place.TYPE_BEAUTY_SALON;
+import static com.google.android.gms.location.places.Place.TYPE_BICYCLE_STORE;
+import static com.google.android.gms.location.places.Place.TYPE_BOOK_STORE;
+import static com.google.android.gms.location.places.Place.TYPE_BOWLING_ALLEY;
+import static com.google.android.gms.location.places.Place.TYPE_BUS_STATION;
+import static com.google.android.gms.location.places.Place.TYPE_CAFE;
+import static com.google.android.gms.location.places.Place.TYPE_CAR_DEALER;
+import static com.google.android.gms.location.places.Place.TYPE_CAR_RENTAL;
+import static com.google.android.gms.location.places.Place.TYPE_CAR_REPAIR;
+import static com.google.android.gms.location.places.Place.TYPE_CAR_WASH;
+import static com.google.android.gms.location.places.Place.TYPE_CLOTHING_STORE;
+import static com.google.android.gms.location.places.Place.TYPE_CONVENIENCE_STORE;
+import static com.google.android.gms.location.places.Place.TYPE_DEPARTMENT_STORE;
+import static com.google.android.gms.location.places.Place.TYPE_DOCTOR;
+import static com.google.android.gms.location.places.Place.TYPE_ELECTRONICS_STORE;
+import static com.google.android.gms.location.places.Place.TYPE_FURNITURE_STORE;
+import static com.google.android.gms.location.places.Place.TYPE_GAS_STATION;
+import static com.google.android.gms.location.places.Place.TYPE_GROCERY_OR_SUPERMARKET;
+import static com.google.android.gms.location.places.Place.TYPE_GYM;
+import static com.google.android.gms.location.places.Place.TYPE_HAIR_CARE;
+import static com.google.android.gms.location.places.Place.TYPE_HARDWARE_STORE;
+import static com.google.android.gms.location.places.Place.TYPE_HEALTH;
+import static com.google.android.gms.location.places.Place.TYPE_HOME_GOODS_STORE;
+import static com.google.android.gms.location.places.Place.TYPE_HOSPITAL;
+import static com.google.android.gms.location.places.Place.TYPE_JEWELRY_STORE;
+import static com.google.android.gms.location.places.Place.TYPE_LAUNDRY;
+import static com.google.android.gms.location.places.Place.TYPE_MEAL_DELIVERY;
+import static com.google.android.gms.location.places.Place.TYPE_MEAL_TAKEAWAY;
+import static com.google.android.gms.location.places.Place.TYPE_MOVIE_RENTAL;
+import static com.google.android.gms.location.places.Place.TYPE_MOVIE_THEATER;
+import static com.google.android.gms.location.places.Place.TYPE_NIGHT_CLUB;
+import static com.google.android.gms.location.places.Place.TYPE_PARKING;
+import static com.google.android.gms.location.places.Place.TYPE_PET_STORE;
+import static com.google.android.gms.location.places.Place.TYPE_PHARMACY;
+import static com.google.android.gms.location.places.Place.TYPE_PHYSIOTHERAPIST;
+import static com.google.android.gms.location.places.Place.TYPE_PLUMBER;
+import static com.google.android.gms.location.places.Place.TYPE_RESTAURANT;
+import static com.google.android.gms.location.places.Place.TYPE_ROOFING_CONTRACTOR;
+import static com.google.android.gms.location.places.Place.TYPE_SHOE_STORE;
+import static com.google.android.gms.location.places.Place.TYPE_SPA;
+import static com.google.android.gms.location.places.Place.TYPE_SUBWAY_STATION;
+import static com.google.android.gms.location.places.Place.TYPE_TAXI_STAND;
+import static com.google.android.gms.location.places.Place.TYPE_TRAIN_STATION;
+import static com.google.android.gms.location.places.Place.TYPE_TRANSIT_STATION;
+import static com.google.android.gms.location.places.Place.TYPE_TRAVEL_AGENCY;
+import static com.google.android.gms.location.places.Place.TYPE_VETERINARY_CARE;
+import static com.google.android.gms.location.places.Place.TYPE_ZOO;
+
+
 public class PlacesService extends Service {
     private static Timer timer = new Timer();
     private Context ctx;
@@ -41,6 +95,9 @@ public class PlacesService extends Service {
 
 
     private Map<LatLng, String> mLocationMap;
+
+    private Map<Integer, String> mPlacesCategoryMap;
+
     private BudgetDatabase _db;
 
 //    public void SetBudgetNotificationManager(BudgetNotificationManager budgetNotificationManager){
@@ -65,6 +122,8 @@ public class PlacesService extends Service {
         // Construct a PlaceDetectionClient.
         mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
         mLocationMap = new ArrayMap<LatLng, String>();
+        mPlacesCategoryMap = new ArrayMap<Integer, String>();
+        mapCats();
 
 
 
@@ -74,7 +133,7 @@ public class PlacesService extends Service {
     private void startService()
     {
         // Removed for debugging
-//        timer.scheduleAtFixedRate(new mainTask(), 0, 5000);
+        timer.scheduleAtFixedRate(new mainTask(), 0, 5000);
     }
 
     private class mainTask extends TimerTask
@@ -149,6 +208,33 @@ public class PlacesService extends Service {
                             Log.e(TAG, "No Places");
                         }
 
+                        for (LatLng loc : mLocationMap.keySet())
+                        {
+                            String nameType = mLocationMap.get(loc);
+                            String[] components = nameType.split(":");
+                            if (components.length > 1) {
+
+                                String[] categories = components[1].substring(1, components[1].length() - 1).replace(" ", "").split(",");
+
+                                if (categories.length > 0) {
+
+                                    Integer placeCategory = Integer.parseInt(categories[0]);
+
+                                    if (mPlacesCategoryMap.containsKey(placeCategory)) {
+                                        String catname = mPlacesCategoryMap.get(placeCategory);
+                                        String shopname = components[0];
+
+                                        mBudgetNotificationManager.showNotificationForCategory(catname, shopname);
+                                    }
+
+                                    Log.d(TAG, "onComplete: Place category: " + placeCategory);
+                                }
+                            }
+
+
+
+                        }
+
                         Log.d(TAG, "Notify");
 
                         mBudgetNotificationManager.showNotificationForCategory("Living Costs", "Foo");
@@ -168,6 +254,66 @@ public class PlacesService extends Service {
     {
         super.onDestroy();
         Toast.makeText(this, "Service Stopped ...", Toast.LENGTH_SHORT).show();
+    }
+
+    private void mapCats()
+    {
+        //mPlacesCategoryMap.put(TYPE_ATM,                    "Cash");
+        //mPlacesCategoryMap.put(TYPE_BANK,                   "Cash");
+        mPlacesCategoryMap.put(TYPE_PET_STORE,              "Family and Pets");
+        mPlacesCategoryMap.put(TYPE_VETERINARY_CARE,        "Family and Pets");
+        mPlacesCategoryMap.put(TYPE_CAR_DEALER,	            "Future needs");
+        mPlacesCategoryMap.put(TYPE_TRAVEL_AGENCY,	        "Future needs");
+        mPlacesCategoryMap.put(TYPE_AIRPORT,	            "Future needs");
+        mPlacesCategoryMap.put(TYPE_JEWELRY_STORE,	        "Future needs");
+        //mPlacesCategoryMap.put(TYPE_CASINO,	                "Gambeling warning");
+        mPlacesCategoryMap.put(TYPE_ELECTRONICS_STORE,	    "Home");
+        mPlacesCategoryMap.put(TYPE_FURNITURE_STORE,	    "Home");
+        mPlacesCategoryMap.put(TYPE_HARDWARE_STORE,	        "Home");
+        mPlacesCategoryMap.put(TYPE_HOME_GOODS_STORE,	    "Home");
+        mPlacesCategoryMap.put(TYPE_PLUMBER,	            "Home");
+        mPlacesCategoryMap.put(TYPE_ROOFING_CONTRACTOR,	    "Home");
+        mPlacesCategoryMap.put(TYPE_AMUSEMENT_PARK,	        "Leisure");
+        mPlacesCategoryMap.put(TYPE_AQUARIUM,	            "Leisure");
+        mPlacesCategoryMap.put(TYPE_BAR,	                "Leisure");
+        mPlacesCategoryMap.put(TYPE_BEAUTY_SALON,   	    "Leisure");
+        mPlacesCategoryMap.put(TYPE_BOOK_STORE,     	    "Leisure");
+        mPlacesCategoryMap.put(TYPE_BOWLING_ALLEY,	        "Leisure");
+        mPlacesCategoryMap.put(TYPE_CAFE,	                "Leisure");
+        mPlacesCategoryMap.put(TYPE_GYM,	                "Leisure");
+        mPlacesCategoryMap.put(TYPE_HAIR_CARE,	            "Leisure");
+        mPlacesCategoryMap.put(TYPE_MEAL_DELIVERY,	        "Leisure");
+        mPlacesCategoryMap.put(TYPE_MEAL_TAKEAWAY,	        "Leisure");
+        mPlacesCategoryMap.put(TYPE_MOVIE_RENTAL,	        "Leisure");
+        mPlacesCategoryMap.put(TYPE_MOVIE_THEATER,	        "Leisure");
+        mPlacesCategoryMap.put(TYPE_NIGHT_CLUB,	            "Leisure");
+        mPlacesCategoryMap.put(TYPE_RESTAURANT,	            "Leisure");
+        mPlacesCategoryMap.put(TYPE_SPA,	                "Leisure");
+        mPlacesCategoryMap.put(TYPE_ZOO,	                "Leisure");
+        mPlacesCategoryMap.put(TYPE_CLOTHING_STORE,	        "Living Costs");
+        mPlacesCategoryMap.put(TYPE_SHOE_STORE,	            "Living Costs");
+        mPlacesCategoryMap.put(TYPE_BAKERY,	                "Living Costs");
+        mPlacesCategoryMap.put(TYPE_CONVENIENCE_STORE,	    "Living Costs");
+        mPlacesCategoryMap.put(TYPE_GROCERY_OR_SUPERMARKET,	"Living Costs");
+        mPlacesCategoryMap.put(TYPE_DEPARTMENT_STORE,	    "Living Costs");
+        mPlacesCategoryMap.put(TYPE_DOCTOR,	                "Living Costs");
+        mPlacesCategoryMap.put(TYPE_HEALTH,	                "Living Costs");
+        mPlacesCategoryMap.put(TYPE_HOSPITAL,	            "Living Costs");
+        mPlacesCategoryMap.put(TYPE_PHARMACY,	            "Living Costs");
+        mPlacesCategoryMap.put(TYPE_PHYSIOTHERAPIST,	    "Living Costs");
+        mPlacesCategoryMap.put(TYPE_LAUNDRY,	            "Living Costs");
+        mPlacesCategoryMap.put(TYPE_PARKING,	            "Travel");
+        mPlacesCategoryMap.put(TYPE_SUBWAY_STATION,     	"Travel");
+        mPlacesCategoryMap.put(TYPE_TAXI_STAND,	            "Travel");
+        mPlacesCategoryMap.put(TYPE_TRAIN_STATION,	        "Travel");
+        mPlacesCategoryMap.put(TYPE_TRANSIT_STATION,      	"Travel");
+        mPlacesCategoryMap.put(TYPE_BICYCLE_STORE,      	"Travel");
+        mPlacesCategoryMap.put(TYPE_BUS_STATION,	        "Travel");
+        mPlacesCategoryMap.put(TYPE_CAR_RENTAL,         	"Travel");
+        mPlacesCategoryMap.put(TYPE_CAR_REPAIR,	            "Travel");
+        mPlacesCategoryMap.put(TYPE_CAR_WASH,	            "Travel");
+        mPlacesCategoryMap.put(TYPE_GAS_STATION,	        "Travel");
+        //mPlacesCategoryMap.put(TYPE_LIQUOR_STORE,	"Warning_alcoholims");
     }
 
 //    private final Handler toastHandler = new Handler()
