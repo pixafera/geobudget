@@ -19,8 +19,6 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent">
 
-        
-
         <Button
             android:id="@+id/Edit_Budget"
             style="@style/Widget.AppCompat.Button"

@@ -47,8 +47,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            ListView budget_list = findViewById(R.id.budget_list);
+            budget_list.setOnItemClickListener(this);
+            this.budgets = _db.getBudgets();
 
-//    public void Notify_Clicked(View v) {
+            MainBudgetItemAdapter adapter = new MainBudgetItemAdapter(this, budgets);
+            budget_list.setAdapter(adapter);
+        } catch (Exception ex) {
+            int i = 0;
+        }
+    }
+
+    //    public void Notify_Clicked(View v) {
 //        _bnm.showNotificationForCategory(1);
 //        _bnm.showNotificationForCategory(2);
 //        _bnm.showNotificationForCategory(3);
