@@ -130,8 +130,6 @@ public class PlacesService extends Service {
     }
 
     private void startService() {
-        // Temporarily on a five minute timer
-
         timer.scheduleAtFixedRate(new mainTask(), 0, 30000);
     }
 
@@ -157,6 +155,7 @@ public class PlacesService extends Service {
                     if (runctr != 1)
                     {
                         runctr++;
+                        Log.d(TAG, "onComplete: Showing Notifications");
                         return;
                     }
                     else
@@ -269,7 +268,7 @@ public class PlacesService extends Service {
 
                         Log.d(TAG, "Notify");
 
-                        mBudgetNotificationManager.showNotificationForCategory("Living Costs", "Foo");
+                        //mBudgetNotificationManager.showNotificationForCategory("Living Costs", "Foo");
 
                         Log.d(TAG, mLocationMap.toString());
 
