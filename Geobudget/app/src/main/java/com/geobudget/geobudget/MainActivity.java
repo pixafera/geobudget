@@ -1,19 +1,10 @@
 package com.geobudget.geobudget;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -22,6 +13,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     BudgetNotificationManager _bnm;
     BudgetDatabase _db;
     ArrayList<Budget> budgets;
+    //PlacesService _placesService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             _db.addTestTransaction();
         }
 
-        _bnm = new BudgetNotificationManager(this, _db);
+        //_bnm = new BudgetNotificationManager(this, _db);
 
         try {
             ListView budget_list = findViewById(R.id.budget_list);
@@ -47,13 +39,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         } catch (Exception ex) {
             int i = 0;
         }
+
+
+
+        Intent intent = new Intent(this, PlacesService.class);
+        startService(intent);
+
     }
 
-    public void Notify_Clicked(View v) {
-        _bnm.showNotificationForCategory(1, "Tesco Extra");
-        _bnm.showNotificationForCategory(2, "Next");
-        _bnm.showNotificationForCategory(3, "Farringdon Railway Station");
-    }
+
+//    public void Notify_Clicked(View v) {
+//        _bnm.showNotificationForCategory(1);
+//        _bnm.showNotificationForCategory(2);
+//        _bnm.showNotificationForCategory(3);
+//    }
 
     public void editBudget(View v) {
         startActivity(new Intent(this, EditActivity.class));
@@ -67,4 +66,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         intent.putExtra("budgetId", chosen.getId());
         startActivity(intent);
     }
+
+
 }
