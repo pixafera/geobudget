@@ -3,7 +3,11 @@ package com.geobudget.geobudget;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.menu.ExpandedMenuView;
 import android.util.Log;
+import android.widget.ExpandableListView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -23,8 +27,14 @@ public class CategoryActivity extends AppCompatActivity {
         }
 
         BudgetDatabase db = new BudgetDatabase(this);
+
+        TextView heading = findViewById(R.id.textView3);
+        String category = db.getBudget(budgetId).getCategory();
+        heading.setText(category);
+
         ArrayList<Payment> payments = db.getPaymentsForBudget(budgetId);
 
-
+        ListView payment_list = findViewById(R.id.expandableListView);
+        payment_list.setAdapter(new CategoryPaymentItemAdapter(this, payments));
     }
 }

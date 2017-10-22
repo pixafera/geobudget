@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -103,16 +105,16 @@ public class BudgetDatabase {
 
     public void addTestTransaction() {
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (1,  5.5,  2017-10-22, (SELECT _id FROM budget WHERE category = 'Living Costs'));");
-        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (2,  14.3, 2017-10-21, (SELECT _id FROM budget WHERE category = 'Travel'));");
-        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (3,  6.95, 2017-10-12, (SELECT _id FROM budget WHERE category = 'Home'));");
-        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (4,  10,   2017-10-17, (SELECT _id FROM budget WHERE category = 'Giving'));");
-        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (5,  20,   2017-10-20, (SELECT _id FROM budget WHERE category = 'Living Costs'));");
-        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (6,  30,   2017-10-11, (SELECT _id FROM budget WHERE category = 'Travel'));");
-        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (7,  16.2, 2017-10-22, (SELECT _id FROM budget WHERE category = 'Living Costs'));");
-        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (8,  5.3,  2017-10-16, (SELECT _id FROM budget WHERE category = 'Family and Pets'));");
-        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (9,  3.2,  2017-10-11, (SELECT _id FROM budget WHERE category = 'Home'));");
-        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (10, 12.7, 2017-10-15, (SELECT _id FROM budget WHERE category = 'Leisure'));");    }
+        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (1,  5.5,  '2017-10-22', (SELECT _id FROM budget WHERE category = 'Living Costs'));");
+        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (2,  14.3, '2017-10-21', (SELECT _id FROM budget WHERE category = 'Travel'));");
+        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (3,  6.95, '2017-10-12', (SELECT _id FROM budget WHERE category = 'Home'));");
+        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (4,  10,   '2017-10-17', (SELECT _id FROM budget WHERE category = 'Giving'));");
+        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (5,  20,   '2017-10-20', (SELECT _id FROM budget WHERE category = 'Living Costs'));");
+        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (6,  30,   '2017-10-11', (SELECT _id FROM budget WHERE category = 'Travel'));");
+        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (7,  16.2, '2017-10-22', (SELECT _id FROM budget WHERE category = 'Living Costs'));");
+        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (8,  5.3,  '2017-10-16', (SELECT _id FROM budget WHERE category = 'Family and Pets'));");
+        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (9,  3.2,  '2017-10-11', (SELECT _id FROM budget WHERE category = 'Home'));");
+        db.execSQL("INSERT INTO payment (_ID, expenditure, date, BUDGET) VALUES (10, 12.7, '2017-10-15', (SELECT _id FROM budget WHERE category = 'Leisure'));");    }
 
     public Budget getBudget(int id) {
         Cursor cur = helper.getReadableDatabase().rawQuery(String.format("SELECT category, allowance, is_income, (SELECT SUM(expenditure) FROM payment WHERE payment.budget = budget._id) FROM budget WHERE _id = %d;", id), null);
@@ -188,9 +190,11 @@ public class BudgetDatabase {
             Payment payment = new Payment(
                     cur.getInt(0),
                     cur.getFloat(1),
-                    new Date(cur.getLong(2)*1000),
+                    new Date(cur.getLong(2)),
                     cur.getInt(3)
             );
+
+            payments.add(payment);
         }
 
         return payments;
