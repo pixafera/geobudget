@@ -52,7 +52,7 @@ public class BudgetDatabase {
                 "CREATE TABLE " + BudgetDatabaseContract.Payment.TABLE_NAME + "("
                 + BudgetDatabaseContract.Payment._ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                 + BudgetDatabaseContract.Payment.EXPENDITURE + " FLOAT(" + FLOAT_PRECISION.toString() + "),"
-                + BudgetDatabaseContract.Payment.DATE + " DATE,"  // Format YYYY-MM-DD
+                + BudgetDatabaseContract.Payment.DATE + " TEXT,"  // Format YYYY-MM-DD
                 + BudgetDatabaseContract.Payment.BUDGET + " INTEGER, FOREIGN KEY (" + BudgetDatabaseContract.Payment._ID + ") REFERENCES "
                         + BudgetDatabaseContract.Budget.TABLE_NAME + "(" + BudgetDatabaseContract.Budget._ID + ")"
                 + ")";
@@ -181,7 +181,7 @@ public class BudgetDatabase {
         );
     }
 
-    public void addTransaction(Payment newPayment) {
+    public void addPayment(Payment newPayment) {
         helper.getWritableDatabase().execSQL(
                 "INSERT INTO payment (expenditure, date, budget) VALUES ("
                         + newPayment.getExpenditure()
@@ -204,7 +204,7 @@ public class BudgetDatabase {
             Payment payment = new Payment(
                     cur.getInt(0),
                     cur.getFloat(1),
-                    new Date(cur.getLong(2)),
+                    cur.getString(2),
                     cur.getInt(3)
             );
 

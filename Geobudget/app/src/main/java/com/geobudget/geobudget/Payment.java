@@ -8,10 +8,10 @@ import java.util.Date;
 
 public class Payment extends DatabaseEntry {
     private Float expenditure;
-    private Date date;
+    private String date;
     private Integer budget;
 
-    public Payment(int id, float expenditure, Date date, int budget) {
+    public Payment(int id, float expenditure, String date, int budget) {
         super(id);
         this.expenditure = expenditure;
         this.date = date;
@@ -26,11 +26,11 @@ public class Payment extends DatabaseEntry {
         this.expenditure = expenditure;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return this.date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
