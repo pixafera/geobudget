@@ -20,7 +20,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -93,10 +92,11 @@ public class PlacesService extends Service {
     private LatLng[] mLikelyPlaceLatLngs;
     private String[] mLikelyPlaceTypes;
 
+    int runctr = 0;
 
-    private Map<LatLng, String> mLocationMap;
+    private ArrayMap<LatLng, String> mLocationMap;
 
-    private Map<Integer, String> mPlacesCategoryMap;
+    private ArrayMap<Integer, String> mPlacesCategoryMap;
 
     private BudgetDatabase _db;
 
@@ -126,14 +126,13 @@ public class PlacesService extends Service {
         mapCats();
 
 
-
         startService();
     }
 
-    private void startService()
-    {
-        // Removed for debugging
-        timer.scheduleAtFixedRate(new mainTask(), 0, 5000);
+    private void startService() {
+        // Temporarily on a five minute timer
+
+        timer.scheduleAtFixedRate(new mainTask(), 0, 30000);
     }
 
     private class mainTask extends TimerTask
@@ -149,9 +148,23 @@ public class PlacesService extends Service {
 
             placeResult.addOnCompleteListener (new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
 
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
 
                 public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
+
+
+                    if (runctr != 1)
+                    {
+                        runctr++;
+                        return;
+                    }
+                    else
+                    {
+                        runctr++;
+                    }
+
+
                     if (task.isSuccessful() && task.getResult() != null) {
                         PlaceLikelihoodBufferResponse likelyPlaces = task.getResult();
 
@@ -208,6 +221,8 @@ public class PlacesService extends Service {
                             Log.e(TAG, "No Places");
                         }
 
+                        ArrayMap<String, String> categoryShopsMap = new ArrayMap<String, String>();
+
                         for (LatLng loc : mLocationMap.keySet())
                         {
                             String nameType = mLocationMap.get(loc);
@@ -224,7 +239,16 @@ public class PlacesService extends Service {
                                         String catname = mPlacesCategoryMap.get(placeCategory);
                                         String shopname = components[0];
 
-                                        mBudgetNotificationManager.showNotificationForCategory(catname, shopname);
+                                        StringBuffer existingShops = new StringBuffer("");
+
+                                        if (categoryShopsMap.containsKey(catname))
+                                        {
+                                            existingShops.append(categoryShopsMap.get(catname));
+                                            existingShops.append(", ");
+                                        }
+
+                                        existingShops.append(shopname);
+                                        categoryShopsMap.put(catname, existingShops.toString());
                                     }
 
                                     Log.d(TAG, "onComplete: Place category: " + placeCategory);
@@ -234,6 +258,14 @@ public class PlacesService extends Service {
 
 
                         }
+
+                        for (String catname : categoryShopsMap.keySet())
+                        {
+
+                            mBudgetNotificationManager.showNotificationForCategory(catname, categoryShopsMap.get(catname));
+                        }
+
+
 
                         Log.d(TAG, "Notify");
 
