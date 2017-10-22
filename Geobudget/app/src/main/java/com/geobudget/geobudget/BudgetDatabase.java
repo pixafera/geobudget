@@ -87,10 +87,29 @@ public class BudgetDatabase {
 
     public void addTestBudgets() {
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Food', 80);", null);
-        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Entertainment', 20);",null);
-        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Fuel', 50);", null);
+        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Income', 320);", null);
+        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Living Costs', 80);", null);
+        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Leisure', 20);",null);
+        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Travel', 50);", null);
+        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Home', 70);", null);
+        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Giving', 20);", null);
+        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Family and Pets', 15);", null);
+        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Future needs', 10);", null);
+        db.rawQuery("INSERT INTO budget (category, allowance) VALUES ('Debt Repayment', 40);", null);
     }
+
+    public void addTestTransaction() {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (1, 5.5, 2017-10-22, 'Living Costs');", null);
+        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (2, 14.3, 2017-10-21, 'Travel');", null);
+        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (3, 6.95, 2017-10-12, 'Home');", null);
+        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (4, 10, 2017-10-17, 'Giving');", null);
+        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (5, 20, 2017-10-20, 'Living Costs');", null);
+        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (6, 30, 2017-10-11, 'Travel');", null);
+        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (7, 16.2, 2017-10-22, 'Living Costs');", null);
+        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (8, 5.3, 2017-10-16, 'Family and Pets');", null);
+        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (9, 3.2, 2017-10-11, 'Home');", null);
+        db.rawQuery("INSERT INTO transaction (_ID, expenditure, date, BUDGET) VALUES (10, 12.7, 2017-10-15, 'Leisure');", null);
 
     public Budget getBudget(int id) {
         Cursor cur = helper.getReadableDatabase().rawQuery(String.format("SELECT category, allowance FROM budget WHERE _id = %d;", id), null);
